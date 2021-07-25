@@ -6,7 +6,12 @@ import com.github.savitoh.forum.modelo.Usuario
 import org.springframework.stereotype.Service
 
 @Service
-class TopicoService(private var topicos: List<Topico>) {
+class TopicoService {
+
+    private companion object {
+        var topicos = mutableListOf<Topico>()
+            private set
+    }
 
     init {
         val cursoProgramacao = Curso(
@@ -47,10 +52,12 @@ class TopicoService(private var topicos: List<Topico>) {
                 email = "joao@email.com"
             )
         )
-        topicos = listOf(topico, topico2, topico3)
+        topicos = mutableListOf(topico, topico2, topico3)
     }
 
-    fun listar(): List<Topico> = topicos
+    fun listar(): List<Topico> = topicos.toList()
+
+    fun criarTopico(topico: Topico) = topicos.add(topico)
 
     fun buscarPorId(id: Long): Topico? = topicos.find { it.id == id }
 }
