@@ -8,6 +8,7 @@ import com.github.savitoh.forum.service.TopicoService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("v1/topicos")
@@ -28,7 +29,7 @@ class TopicoController(
     }
 
     @PostMapping
-    fun criar(@RequestBody novoTopicoRequest: NovoTopicoRequest): ResponseEntity<Unit> {
+    fun criar(@RequestBody @Valid novoTopicoRequest: NovoTopicoRequest): ResponseEntity<Unit> {
         topicoService.criar(novoTopicoRequest)
         return ResponseEntity(HttpStatus.CREATED)
     }
