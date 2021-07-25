@@ -41,7 +41,7 @@ class TopicoService(private val cursoService: CursoService, private val usuarioS
 
     fun listar(): List<Topico> = topicos.toList()
 
-    fun criarTopico(novoTopico: NovoTopicoRequest) {
+    fun criar(novoTopico: NovoTopicoRequest) {
         val curso = cursoService.listar().find { it.id == novoTopico.idCurso } ?: throw NoSuchElementException()
         val autor = usuarioService.listar().find { it.id == novoTopico.idAutor } ?: throw NoSuchElementException()
         val topico = Topico(

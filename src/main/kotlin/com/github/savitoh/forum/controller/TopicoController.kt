@@ -24,7 +24,7 @@ class TopicoController(private val topicoService: TopicoService) {
 
     @PostMapping
     fun criar(@RequestBody novoTopicoRequest: NovoTopicoRequest): ResponseEntity<Unit> {
-        topicoService.criarTopico(novoTopicoRequest)
+        topicoService.criar(novoTopicoRequest)
         return ResponseEntity(HttpStatus.CREATED)
     }
 }
