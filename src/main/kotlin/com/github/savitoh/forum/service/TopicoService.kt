@@ -1,10 +1,11 @@
 package com.github.savitoh.forum.service
 
+import com.github.savitoh.forum.dto.request.NovoTopicoRequest
 import com.github.savitoh.forum.modelo.Topico
 import org.springframework.stereotype.Service
 
 @Service
-class TopicoService(cursoService: CursoService, usuarioService: UsuarioService) {
+class TopicoService(private val cursoService: CursoService, private val usuarioService: UsuarioService) {
 
     private companion object {
         var topicos = mutableListOf<Topico>()
@@ -40,7 +41,18 @@ class TopicoService(cursoService: CursoService, usuarioService: UsuarioService) 
 
     fun listar(): List<Topico> = topicos.toList()
 
-    fun criarTopico(topico: Topico) = topicos.add(topico)
+    fun criarTopico(novoTopico: NovoTopicoRequest) {
+        val curso = cursoService.listar().find { it.id == novoTopico.idCurso } ?: throw NoSuchElementException()
+        val autor = usuarioService.listar().find { it.id == novoTopico.idAutor } ?: throw NoSuchElementException()
+        val topico = Topico(
+            id = topicos.size.toLong() + 1,
+            titulo = novoTopico.titulo,
+            mensagem = novoTopico.mensagem,
+            curso = curso,
+            autor = autor
+        )
+        topicos.add(topico)
+    }
 
     fun buscarPorId(id: Long): Topico? = topicos.find { it.id == id }
 }

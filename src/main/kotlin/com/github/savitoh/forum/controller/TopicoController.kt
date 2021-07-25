@@ -1,7 +1,9 @@
 package com.github.savitoh.forum.controller
 
+import com.github.savitoh.forum.dto.request.NovoTopicoRequest
 import com.github.savitoh.forum.modelo.Topico
 import com.github.savitoh.forum.service.TopicoService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -21,5 +23,8 @@ class TopicoController(private val topicoService: TopicoService) {
     }
 
     @PostMapping
-    fun cadastrar() {}
+    fun criar(@RequestBody novoTopicoRequest: NovoTopicoRequest): ResponseEntity<Unit> {
+        topicoService.criarTopico(novoTopicoRequest)
+        return ResponseEntity(HttpStatus.CREATED)
+    }
 }
