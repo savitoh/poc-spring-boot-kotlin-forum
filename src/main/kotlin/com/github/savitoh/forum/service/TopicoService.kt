@@ -51,4 +51,6 @@ class TopicoService(private var topicos: List<Topico>) {
     }
 
     fun listar(): List<Topico> = topicos
+
+    fun buscarPorId(id: Long): Topico? = topicos.find { it.id == id }
 }
