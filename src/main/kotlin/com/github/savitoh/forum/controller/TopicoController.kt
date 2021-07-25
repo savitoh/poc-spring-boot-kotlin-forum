@@ -2,13 +2,16 @@ package com.github.savitoh.forum.controller
 
 import com.github.savitoh.forum.dto.request.NovoTopicoRequest
 import com.github.savitoh.forum.dto.response.TopicoResponse
+import com.github.savitoh.forum.dto.response.error.ErrorResponse
 import com.github.savitoh.forum.mapper.Mapper
+import com.github.savitoh.forum.modelo.CriacaoRecursoResultado
 import com.github.savitoh.forum.modelo.Topico
 import com.github.savitoh.forum.service.TopicoService
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.util.UriComponentsBuilder
 import javax.validation.Valid
+
 
 @RestController
 @RequestMapping("v1/topicos")
@@ -29,8 +32,16 @@ class TopicoController(
     }
 
     @PostMapping
-    fun criar(@RequestBody @Valid novoTopicoRequest: NovoTopicoRequest): ResponseEntity<Unit> {
-        topicoService.criar(novoTopicoRequest)
-        return ResponseEntity(HttpStatus.CREATED)
+    fun criar(
+        @RequestBody @Valid novoTopicoRequest: NovoTopicoRequest,
+        uriComponentsBuilder: UriComponentsBuilder,
+    ): ResponseEntity<ErrorResponse> {
+        return when (val result = topicoService.criar(novoTopicoRequest)) {
+            is CriacaoRecursoResultado.Success -> {
+                val uriComponents = uriComponentsBuilder.path("/{id}").buildAndExpand(result.value.id)
+                ResponseEntity.created(uriComponents.toUri()).build()
+            }
+            is CriacaoRecursoResultado.Failure -> ResponseEntity.badRequest().body(ErrorResponse(result.message))
+        }
     }
 }

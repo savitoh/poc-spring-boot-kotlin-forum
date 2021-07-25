@@ -1,6 +1,7 @@
 package com.github.savitoh.forum.service
 
 import com.github.savitoh.forum.dto.request.NovoTopicoRequest
+import com.github.savitoh.forum.modelo.CriacaoRecursoResultado
 import com.github.savitoh.forum.modelo.Topico
 import org.springframework.stereotype.Service
 
@@ -41,13 +42,15 @@ class TopicoService(private val cursoService: CursoService, private val usuarioS
 
     fun listar(): List<Topico> = topicos.toList()
 
-    fun criar(novoTopico: NovoTopicoRequest) {
+    fun criar(novoTopico: NovoTopicoRequest): CriacaoRecursoResultado<Topico> {
         val curso = cursoService.listar()
             .find { it.id == novoTopico.idCurso }
-            ?: throw NoSuchElementException("Curso não encontrado com ID: ${novoTopico.idCurso}")
+            ?: return CriacaoRecursoResultado.Failure(message = "Curso não encontrado com ID: ${novoTopico.idCurso}",
+                cause = NoSuchElementException())
         val autor = usuarioService.listar()
             .find { it.id == novoTopico.idAutor }
-            ?: throw NoSuchElementException("Autor não encontrado com ID: ${novoTopico.idAutor}")
+            ?: return CriacaoRecursoResultado.Failure(message = "Autor não encontrado com ID: ${novoTopico.idAutor}",
+                cause = NoSuchElementException())
         val topico = Topico(
             id = topicos.size.toLong() + 1,
             titulo = novoTopico.titulo,
@@ -56,6 +59,7 @@ class TopicoService(private val cursoService: CursoService, private val usuarioS
             autor = autor
         )
         topicos.add(topico)
+        return CriacaoRecursoResultado.Success(value = topico)
     }
 
     fun buscarPorId(id: Long): Topico? = topicos.find { it.id == id }
