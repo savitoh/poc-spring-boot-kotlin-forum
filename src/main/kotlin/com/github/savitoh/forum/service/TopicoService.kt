@@ -50,5 +50,5 @@ class TopicoService(private var topicos: List<Topico>) {
         topicos = listOf(topico, topico2, topico3)
     }
 
-    fun getTopicos(): List<Topico> = topicos
+    fun listar(): List<Topico> = topicos
 }

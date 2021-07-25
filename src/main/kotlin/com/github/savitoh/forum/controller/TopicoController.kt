@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.RestController
 class TopicoController(private val topicoService: TopicoService) {
 
     @GetMapping
-    fun getTopicos() = topicoService.getTopicos()
+    fun listar() = topicoService.listar()
 
 }
