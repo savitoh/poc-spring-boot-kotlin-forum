@@ -1,6 +1,8 @@
 package com.github.savitoh.forum.controller
 
 import com.github.savitoh.forum.dto.request.NovoTopicoRequest
+import com.github.savitoh.forum.dto.response.TopicoResponse
+import com.github.savitoh.forum.mapper.Mapper
 import com.github.savitoh.forum.modelo.Topico
 import com.github.savitoh.forum.service.TopicoService
 import org.springframework.http.HttpStatus
@@ -9,16 +11,19 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("v1/topicos")
-class TopicoController(private val topicoService: TopicoService) {
+class TopicoController(
+    private val topicoService: TopicoService,
+    private val topicoResponseMapper: Mapper<Topico, TopicoResponse>,
+) {
 
     @GetMapping
-    fun listar() = topicoService.listar()
+    fun listar(): List<TopicoResponse> = topicoService.listar().map { topico -> topicoResponseMapper.map(topico) }
 
     @GetMapping("/{id}")
-    fun buscarPorId(@PathVariable("id") identificador: Long): ResponseEntity<Topico> {
+    fun buscarPorId(@PathVariable("id") identificador: Long): ResponseEntity<TopicoResponse> {
         return topicoService.buscarPorId(identificador).let { topico: Topico? ->
             if (topico == null) ResponseEntity.notFound().build()
-            else ResponseEntity.ok(topico)
+            else ResponseEntity.ok(topicoResponseMapper.map(topico))
         }
     }
 
