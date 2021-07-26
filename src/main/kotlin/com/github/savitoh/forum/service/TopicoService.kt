@@ -1,6 +1,8 @@
 package com.github.savitoh.forum.service
 
+import com.github.savitoh.forum.dto.request.AtualizacaoTopicoRequest
 import com.github.savitoh.forum.dto.request.NovoTopicoRequest
+import com.github.savitoh.forum.modelo.AtualizacaoRecursoResultado
 import com.github.savitoh.forum.modelo.CriacaoRecursoResultado
 import com.github.savitoh.forum.modelo.Topico
 import org.springframework.stereotype.Service
@@ -60,6 +62,15 @@ class TopicoService(private val cursoService: CursoService, private val usuarioS
         )
         topicos.add(topico)
         return CriacaoRecursoResultado.Success(value = topico)
+    }
+
+    fun atualizar(id: Long, atualizacaoTopicoRequest: AtualizacaoTopicoRequest): AtualizacaoRecursoResultado<Topico> {
+        return this.buscarPorId(id)?.let { topico ->
+            topico.titulo = atualizacaoTopicoRequest.titulo
+            topico.mensagem = atualizacaoTopicoRequest.mensagem
+            AtualizacaoRecursoResultado.Success
+        } ?: AtualizacaoRecursoResultado.Failure(message = "Tópico não encontrado com ID: $id",
+            cause = NoSuchElementException())
     }
 
     fun buscarPorId(id: Long): Topico? = topicos.find { it.id == id }

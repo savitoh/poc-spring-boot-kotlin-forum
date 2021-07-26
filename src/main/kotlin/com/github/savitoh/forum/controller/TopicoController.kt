@@ -1,9 +1,11 @@
 package com.github.savitoh.forum.controller
 
+import com.github.savitoh.forum.dto.request.AtualizacaoTopicoRequest
 import com.github.savitoh.forum.dto.request.NovoTopicoRequest
 import com.github.savitoh.forum.dto.response.TopicoResponse
 import com.github.savitoh.forum.dto.response.error.ErrorResponse
 import com.github.savitoh.forum.mapper.Mapper
+import com.github.savitoh.forum.modelo.AtualizacaoRecursoResultado
 import com.github.savitoh.forum.modelo.CriacaoRecursoResultado
 import com.github.savitoh.forum.modelo.Topico
 import com.github.savitoh.forum.service.TopicoService
@@ -42,6 +44,17 @@ class TopicoController(
                 ResponseEntity.created(uriComponents.toUri()).build()
             }
             is CriacaoRecursoResultado.Failure -> ResponseEntity.badRequest().body(ErrorResponse(result.message))
+        }
+    }
+
+    @PatchMapping("/{id}")
+    fun atualizar(
+        @PathVariable("id") id: Long,
+        @RequestBody @Valid atualizacaoTopicoRequest: AtualizacaoTopicoRequest,
+    ): ResponseEntity<ErrorResponse> {
+        return when (val result = topicoService.atualizar(id, atualizacaoTopicoRequest)) {
+            is AtualizacaoRecursoResultado.Success -> ResponseEntity.noContent().build()
+            is AtualizacaoRecursoResultado.Failure -> ResponseEntity.badRequest().body(ErrorResponse(result.message))
         }
     }
 }
