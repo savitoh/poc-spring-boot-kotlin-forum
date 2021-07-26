@@ -57,4 +57,10 @@ class TopicoController(
             is AtualizacaoRecursoResultado.Failure -> ResponseEntity.badRequest().body(ErrorResponse(result.message))
         }
     }
+
+    @DeleteMapping("/{id}")
+    fun excluir(@PathVariable("id") id: Long): ResponseEntity<Nothing> {
+        return if (topicoService.excluir(id)) ResponseEntity.ok().build()
+        else ResponseEntity.notFound().build()
+    }
 }

@@ -73,5 +73,7 @@ class TopicoService(private val cursoService: CursoService, private val usuarioS
             cause = NoSuchElementException())
     }
 
+    fun excluir(id: Long) = buscarPorId(id)?.let { topicos.remove(it) } ?: false
+
     fun buscarPorId(id: Long): Topico? = topicos.find { it.id == id }
 }
