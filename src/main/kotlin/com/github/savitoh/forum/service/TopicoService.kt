@@ -66,8 +66,18 @@ class TopicoService(private val cursoService: CursoService, private val usuarioS
 
     fun atualizar(id: Long, atualizacaoTopicoRequest: AtualizacaoTopicoRequest): AtualizacaoRecursoResultado<Topico> {
         return this.buscarPorId(id)?.let { topico ->
-            topico.titulo = atualizacaoTopicoRequest.titulo
-            topico.mensagem = atualizacaoTopicoRequest.mensagem
+            val novoTopico = Topico(
+                id = topico.id,
+                titulo = topico.titulo,
+                mensagem = topico.mensagem,
+                criacao = topico.criacao,
+                curso = topico.curso,
+                autor = topico.autor,
+                status = topico.status,
+                respostas = topico.respostas
+            )
+            topicos.remove(topico)
+            topicos.add(novoTopico)
             AtualizacaoRecursoResultado.Success
         } ?: AtualizacaoRecursoResultado.Failure(message = "Tópico não encontrado com ID: $id",
             cause = NoSuchElementException())
