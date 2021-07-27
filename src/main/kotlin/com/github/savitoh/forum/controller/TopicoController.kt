@@ -3,7 +3,7 @@ package com.github.savitoh.forum.controller
 import com.github.savitoh.forum.dto.request.AtualizacaoTopicoRequest
 import com.github.savitoh.forum.dto.request.NovoTopicoRequest
 import com.github.savitoh.forum.dto.response.TopicoResponse
-import com.github.savitoh.forum.dto.response.error.ErrorResponse
+import error.ErrorResponse
 import com.github.savitoh.forum.mapper.Mapper
 import com.github.savitoh.forum.modelo.AtualizacaoRecursoResultado
 import com.github.savitoh.forum.modelo.CriacaoRecursoResultado
